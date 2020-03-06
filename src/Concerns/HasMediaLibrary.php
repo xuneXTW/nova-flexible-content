@@ -20,11 +20,13 @@ trait HasMediaLibrary {
      *
      * @return \Spatie\MediaLibrary\HasMedia\HasMedia
      */
-    protected function getMediaModel() : HasMedia
+    protected function getMediaModel()
+    : HasMedia
     {
         $model = Flexible::getOriginModel();
 
-        if(is_null($model) || !($model instanceof HasMedia)) {
+        if (is_null($model) || ! ($model instanceof HasMedia))
+        {
             throw new \Exception('Origin HasMedia model not found.');
         }
 
@@ -46,16 +48,29 @@ trait HasMediaLibrary {
     }
 
     /**
+     * Get media collection name with key postfix
+     *
+     * @param $collectionName
+     *
+     * @return string
+     */
+    public function getCollectionNameWithKey($collectionName)
+    {
+        return $collectionName . '_' . $this->inUseKey();
+    }
+
+    /**
      * Get media collection by its collectionName.
      *
-     * @param string $collectionName
+     * @param string         $collectionName
      * @param array|callable $filters
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getMedia(string $collectionName = 'default', $filters = []): Collection
+    public function getMedia(string $collectionName = 'default', $filters = [])
+    : Collection
     {
-        return app(MediaRepository::class)->getCollection($this->getMediaModel(), $collectionName . '_' . $this->inUseKey(), $filters);
+        return app(MediaRepository::class)->getCollection($this->getMediaModel(), $this->getCollectionNameWithKey($collectionName), $filters);
     }
 
 }
